@@ -1,15 +1,26 @@
+###
+全角 => 半角
+###
 zen2han = (zen) ->
 	han = zen.replace /[Ａ-Ｚａ-ｚ０-９！＂＃＄％＆＇（）＊＋，－．／：；＜＝＞？＠［＼］＾＿｀｛｜｝～]/g, (c) ->
 		String.fromCharCode c.charCodeAt(0) - 0xFEE0
 	han.split('　').join(' ')
 
+###
+数字のみ
+###
 filterNaN = (nan) ->
 	nan.replace /\D/g, ''
 
+###
+変換ハンドリング
+###
 convert = (str, condition) ->
+	# キャスト
 	str = '' + str
 	conditions = if condition instanceof Array then condition else [condition]
 
+	# フィルタ適用
 	for c in conditions
 		switch c
 			when 'zen2han'
@@ -19,15 +30,20 @@ convert = (str, condition) ->
 				str = filterNaN str
 	str
 
+###
+インターフェース
+###
 normalizr = (obj, opts) ->
+	# 文字単体
 	if typeof obj is 'string'
 		convert obj, opts
 
+	# オブジェクト
 	else
 		result = {}
 
 		for key, value of obj
-			condition = if isString then opts else opts[key]
+			condition = opts[key]
 
 			if condition?
 				result[key] = convert value, condition
@@ -36,10 +52,13 @@ normalizr = (obj, opts) ->
 				result[key] = value
 		result
 
+	# TODO?: 配列
+
 ###
 export
 ###
 (->
+		# 環境に応じたグローバルなオブジェクトをさがす
 		if typeof self isnt 'undefined'
 			return self
 		if typeof window isnt 'undefined'
