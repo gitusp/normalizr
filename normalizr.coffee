@@ -1,4 +1,4 @@
-zen2han = (zen = '') ->
+zen2han = (zen) ->
 	han = zen.replace /[Ａ-Ｚａ-ｚ０-９！＂＃＄％＆＇（）＊＋，－．／：；＜＝＞？＠［＼］＾＿｀｛｜｝～]/g, (c) ->
 		String.fromCharCode c.charCodeAt(0) - 0xFEE0
 	han.split('　').join(' ')
@@ -6,25 +6,35 @@ zen2han = (zen = '') ->
 filterNaN = (nan) ->
 	nan.replace /\D/g, ''
 
+convert = (str, condition) ->
+	str = '' + str
+	conditions = if condition instanceof Array then condition else [condition]
+
+	for c in conditions
+		switch c
+			when 'zen2han'
+				str = zen2han str
+
+			when 'numeric'
+				str = filterNaN str
+	str
+
 normalizr = (obj, opts) ->
-	result = {}
-	for key, value of obj
-		condition = opts[key]
+	if typeof obj is 'string'
+		convert obj, opts
 
-		if condition?
-			conditions = if condition instanceof Array then condition else [condition]
+	else
+		result = {}
 
-			for c in conditions
-				switch c
-					when 'zen2han'
-						value = zen2han value
+		for key, value of obj
+			condition = if isString then opts else opts[key]
 
-					when 'numeric'
-						value = filterNaN value
-			result[key] = value
-				
-		else
-			result[key] = value
+			if condition?
+				result[key] = convert value, condition
+					
+			else
+				result[key] = value
+		result
 
 ###
 export
