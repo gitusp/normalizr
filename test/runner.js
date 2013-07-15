@@ -26,6 +26,15 @@
       zen = '　ｇ11３４　／';
       return assert((normalizr(zen, 'numeric')) === '11');
     });
+    it('numeric_graceful(custom)', function() {
+      var ng, zen;
+
+      ng = function(str) {
+        return (normalizr(str, 'numeric')) || str;
+      };
+      zen = '　ｇ　／';
+      return assert((normalizr(zen, ng)) === '　ｇ　／');
+    });
     return it('zen2han => numeric', function() {
       var zen;
 

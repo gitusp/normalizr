@@ -43,6 +43,11 @@
           break;
         case 'numeric':
           str = filterNaN(str);
+          break;
+        default:
+          if (typeof c === 'function') {
+            str = c(str);
+          }
       }
     }
     return str;

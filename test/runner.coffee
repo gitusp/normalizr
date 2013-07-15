@@ -11,6 +11,13 @@ describe '文字単体', ->
 		zen = '　ｇ11３４　／'
 		assert (normalizr(zen, 'numeric')) is '11'
 
+	it 'numeric_graceful(custom)', ->
+		ng = (str) ->
+			(normalizr str, 'numeric') or str
+
+		zen = '　ｇ　／'
+		assert (normalizr(zen, ng)) is '　ｇ　／'
+
 	it 'zen2han => numeric', ->
 		zen = '　ｇ11３４　／'
 		assert (normalizr(zen, ['zen2han', 'numeric'])) is '1134'

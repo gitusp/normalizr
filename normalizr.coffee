@@ -28,6 +28,10 @@ convert = (str, condition) ->
 
 			when 'numeric'
 				str = filterNaN str
+
+			# カスタムフィルタ
+			else
+				str = c str if typeof c is 'function'
 	str
 
 ###
